@@ -1,0 +1,1216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>I Love You</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💗</text></svg>"
+    />
+    <style>
+      :root {
+        --bg: #fff0f5;
+        --ink: #3b1f2b;
+        --pink: #ff5c93;
+        --deep: #c2185b;
+        --card: #fff;
+        --gold: #ffb703;
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Segoe UI", system-ui, sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2 {
+        font-family: "Comic Sans MS", "Chalkboard SE", cursive;
+        margin: 0.2em 0;
+      }
+
+      section {
+        display: none;
+        min-height: 100vh;
+        padding: 24px 18px 60px;
+        max-width: 480px;
+        margin: 0 auto;
+        text-align: center;
+        animation: in 0.5s ease;
+      }
+
+      section.active {
+        display: block;
+      }
+
+      @keyframes in {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      button {
+        background: var(--pink);
+        color: #fff;
+        border: 0;
+        border-radius: 999px;
+        padding: 12px 26px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 0 var(--deep);
+        margin-top: 16px;
+      }
+
+      button:active {
+        transform: translateY(3px);
+        box-shadow: 0 1px 0 var(--deep);
+      }
+
+      input {
+        padding: 12px 16px;
+        border-radius: 999px;
+        border: 2px solid var(--pink);
+        font-size: 1rem;
+        text-align: center;
+        width: 80%;
+      }
+
+      .hint {
+        font-size: 0.85rem;
+        opacity: 0.7;
+      }
+
+      .big {
+        font-size: 3.5rem;
+      }
+
+      /* countdown */
+      #count {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin: 16px 0;
+      }
+
+      #count div {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 10px 12px;
+        min-width: 62px;
+        box-shadow: 0 3px 10px #0001;
+      }
+
+      #count b {
+        display: block;
+        font-size: 1.6rem;
+      }
+
+      /* certificate */
+      .cert {
+        background: #fffdf5;
+        border: 6px double var(--gold);
+        border-radius: 14px;
+        padding: 22px 16px;
+        margin: 16px 0;
+        box-shadow: 0 6px 18px #0002;
+      }
+
+      .stat {
+        text-align: left;
+        margin: 10px 0;
+        font-size: 0.9rem;
+      }
+
+      .bar {
+        height: 14px;
+        background: #eee;
+        border-radius: 99px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+
+      .bar i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--pink), var(--gold));
+        transition: width 1.6s ease;
+      }
+
+      /* scratch cards */
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 22px;
+        margin-top: 16px;
+        justify-items: center;
+      }
+
+      .grid .sc {
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .sc {
+        position: relative;
+        aspect-ratio: 3/4;
+        border-radius: 14px;
+        overflow: hidden;
+        background: var(--card);
+        box-shadow: 0 3px 10px #0002;
+      }
+
+      .sc .under {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sc .under .m {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #ffd6e5, #ffe9b8);
+        font-size: 2rem;
+        overflow: hidden;
+      }
+
+      .sc .under .m img,
+      .sc .under .m video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .sc .under p {
+        margin: 0;
+        padding: 6px;
+        font-size: 0.78rem;
+        background: #fff;
+      }
+
+      .sc canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+      }
+
+      /* game */
+      #arena {
+        position: relative;
+        height: 380px;
+        background: var(--card);
+        border-radius: 18px;
+        overflow: hidden;
+        margin-top: 14px;
+        box-shadow: inset 0 0 0 3px #ffd0e0;
+      }
+
+      .thought {
+        position: absolute;
+        top: -40px;
+        background: #ffe3ec;
+        border: 2px solid var(--pink);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        animation: fall linear forwards;
+        user-select: none;
+      }
+
+      @keyframes fall {
+        to {
+          top: 400px;
+        }
+      }
+
+      .pop {
+        animation: none !important;
+        transform: scale(1.6);
+        opacity: 0;
+        transition: 0.25s;
+      }
+
+      /* galleries */
+      .gal {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        margin: 14px 0 0;
+        padding: 4px 0 12px;
+      }
+
+      .gi {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+        background: var(--card);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 14px #0002;
+      }
+
+      .gm {
+        aspect-ratio: 3/4;
+        display: flex;
+        justify-content: center;
+        background: linear-gradient(135deg, #ffd6e5, #ffe9b8);
+        font-size: 1.2rem;
+      }
+
+      .gm img,
+      .gm video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .gi p {
+        margin: 0;
+        padding: 10px;
+        font-size: 0.85rem;
+      }
+
+      #g_solo_n,
+      #g_together_n {
+        display: none;
+      }
+
+      /* song */
+      .songcard {
+        background: var(--card);
+        border-radius: 18px;
+        padding: 20px;
+        margin: 16px 0;
+        box-shadow: 0 6px 18px #0002;
+      }
+
+      .songcard .line {
+        font-family: "Comic Sans MS", "Chalkboard SE", cursive;
+        font-size: 1.25rem;
+        color: var(--deep);
+        line-height: 1.5;
+        margin: 10px 0;
+        white-space: pre-line;
+      }
+
+      .songcard iframe {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border: 0;
+        border-radius: 12px;
+        margin-top: 14px;
+      }
+
+      .alt {
+        background: #fff;
+        color: var(--deep);
+        box-shadow: 0 4px 0 #e9bccd;
+        border: 2px solid var(--pink);
+      }
+
+      /* quiz */
+      .opt {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        background: var(--card);
+        color: var(--ink);
+        box-shadow: 0 3px 0 #e9bccd;
+        border: 2px solid #ffd0e0;
+      }
+
+      .opt.ok {
+        background: #c8f7d4;
+        border-color: #3cb371;
+      }
+
+      .opt.bad {
+        background: #ffd6d6;
+        border-color: #e55;
+      }
+
+      #qmsg {
+        min-height: 1.6em;
+        font-weight: 700;
+      }
+
+      /* overthink */
+      .thing {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 14px;
+        margin: 12px 0;
+        cursor: pointer;
+        box-shadow: 0 3px 10px #0001;
+      }
+
+      .thing s {
+        opacity: 0.55;
+      }
+
+      .thing .truth {
+        display: none;
+        margin-top: 8px;
+        color: var(--deep);
+        font-weight: 700;
+      }
+
+      .thing.open .truth {
+        display: block;
+      }
+
+      /* final */
+      .slides {
+        position: relative;
+        width: 100%;
+        height: 320px;
+        max-width: 100%;
+        margin: 14px auto;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #ffe3ec;
+        box-shadow: 0 6px 18px #0002;
+        transition:
+          width 0.6s ease,
+          height 0.6s ease;
+        cursor: pointer;
+      }
+
+      .slides img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 1s ease;
+      }
+
+      .slides img.on {
+        opacity: 1;
+      }
+
+      #finalTitle {
+        white-space: pre-line;
+      }
+
+      #usCap {
+        font-size: 1rem;
+        min-height: 3.2em;
+        margin: 4px 0 0;
+      }
+
+      .letter {
+        background: #fffdf5;
+        border-radius: 14px;
+        padding: 20px;
+        text-align: left;
+        line-height: 1.7;
+        box-shadow: 0 6px 18px #0002;
+        white-space: pre-line;
+      }
+
+      .env {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 14px;
+        margin: 10px 0;
+        cursor: pointer;
+        box-shadow: 0 3px 10px #0001;
+      }
+
+      .env .in {
+        display: none;
+        margin-top: 8px;
+        text-align: left;
+      }
+
+      .env.open .in {
+        display: block;
+      }
+
+      .ph {
+        width: 100%;
+        aspect-ratio: 16/10;
+        background: linear-gradient(135deg, #ffd6e5, #ffe9b8);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        margin: 14px 0;
+        overflow: hidden;
+      }
+
+      .ph img,
+      .ph video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .float {
+        position: fixed;
+        bottom: -30px;
+        pointer-events: none;
+        animation: up 4s linear forwards;
+        z-index: 9;
+      }
+
+      @keyframes up {
+        to {
+          bottom: 110vh;
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 1. LOCK -->
+    <section id="s0" class="active">
+      <div class="big">🔒</div>
+      <h1 id="lockTitle"></h1>
+      <div id="count"></div>
+      <p id="lockMsg"></p>
+      <input id="code" placeholder="secret code..." autocomplete="off" />
+      <br /><button onclick="tryCode()">Unlock</button>
+      <p class="hint" id="codeHint"></p>
+    </section>
+
+    <!-- 2. CERTIFICATE -->
+    <section id="s1">
+      <h1>🏆 Official Document 🏆</h1>
+      <div class="cert">
+        <div class="hint">THE MINISTRY OF CHAOS HEREBY CERTIFIES THAT</div>
+        <h2 id="certName"></h2>
+        <div id="certTitle" style="font-weight: 700"></div>
+        <div id="stats"></div>
+        <div class="hint" style="margin-top: 12px" id="certSign"></div>
+      </div>
+      <button onclick="go(2)">Accept this honor 🫡</button>
+    </section>
+
+    <!-- 3. SCRATCH -->
+    <section id="s2">
+      <h1>Memory Lane 🛤️</h1>
+<p class="hint">Scratch each card to relive a moment. Reveal them all to continue.</p>
+      <div class="grid" id="scGrid"></div>
+      <button id="scNext" style="display: none" onclick="go(3)">Next →</button>
+    </section>
+
+    <!-- 4. GAME -->
+    <section id="s3">
+      <h1>Pop the overthoughts 🫧</h1>
+      <p>
+        Tap the thoughts before they reach the bottom. Pop <b id="goal"></b> to
+        win.
+      </p>
+      <div>
+        <b>Popped:</b> <span id="score">0</span> &nbsp; <b>Escaped:</b>
+        <span id="miss">0</span>
+      </div>
+      <div id="arena"></div>
+      <button id="startBtn" onclick="startGame()">Start</button>
+    </section>
+
+    <!-- 5. QUIZ -->
+    <section id="s4">
+      <h1>How well do you know us? 💘</h1>
+      <p class="hint" id="qnum"></p>
+      <h2 id="qtext"></h2>
+      <div id="qopts"></div>
+      <div id="qmsg"></div>
+    </section>
+
+    <!-- 5b. SONG -->
+    <section id="s7">
+      <h1 id="songTitle"></h1>
+      <p id="songIntro"></p>
+      <div class="songcard">
+        <div class="hint">the part I want you to hear</div>
+        <div class="line" id="songLine"></div>
+        <div class="hint" id="songName"></div>
+        <button onclick="openSong()">▶ Play it on YouTube</button>
+        <p class="hint">
+          Tip: use headphones 🎧 and listen till the end of the verse.
+        </p>
+      </div>
+      <button onclick="go(5)">Next →</button>
+    </section>
+
+    <!-- 6. OVERTHINKER -->
+    <section id="s5">
+      <h1>Things you overthink 🌀</h1>
+      <p class="hint">Tap each one.</p>
+      <div id="things"></div>
+      <button id="thNext" style="display: none" onclick="go(8)">
+        One last thing →
+      </button>
+    </section>
+
+    <!-- 6b. GALLERY: JUST HER -->
+    <section id="s8">
+      <h1 id="g_solo_title"></h1>
+      <p id="g_solo_intro"></p>
+      <div class="gal" id="g_solo"></div>
+      <div class="hint" id="g_solo_n"></div>
+      <button onclick="go(9)">Next →</button>
+    </section>
+
+    <!-- 6c. GALLERY: US -->
+    <section id="s9">
+      <h1 id="g_together_title"></h1>
+      <p id="g_together_intro"></p>
+      <div class="slides" id="usSlides"></div>
+      <p id="usCap"></p>
+      <button onclick="go(6)">One last thing →</button>
+    </section>
+
+    <!-- 7. FINAL -->
+    <section id="s6">
+      <h1 id="finalTitle"></h1>
+      <div class="slides" id="finalSlides"></div>
+      <div class="letter" id="letter"></div>
+      <p class="hint">Come back to this page any time.</p>
+    </section>
+
+    <script>
+      /* =====================================================
+EDIT THIS BLOCK ONLY. Everything below is the engine.
+Media: put files in a /media folder next to this file
+and reference them like "media/pic1.jpg".
+Leave "" to show a placeholder.
+===================================================== */
+      const CFG = {
+        name: "Saaaannnniiiiyyyyaaaa",
+        nickname: "Sanulyaaaa",
+        unlockAt: "2026-11-07T00:00:00+05:30", // her birthday midnight, her timezone!
+        code: "chrysanthemum", // secret code, lowercase
+        codeHint: "Hint: Your First Nickname 🙈",
+        lockMsg: "Something is waiting for you. It unlocks at midnight.",
+        certTitle: "Certified Feral Since [2006]",
+        certSign: "Signed, Your Favorite Human",
+        stats: [
+          ["Sweetness", 111],
+          ["Unbothered", 11],
+          ["Overthinking", 100],
+          ["Cuteness", 111],
+        ],
+        scratch: [
+          // up to 6 works best
+          {
+            media: "moments_1.jpg",
+            type: "img",
+            caption:
+              "The First Time We Met In Public After Not Being Strangers Anymore...😝",
+          },
+          {
+            media: "moments_2.jpg",
+            type: "img",
+            caption: "The Badam Shake And Notes Exchange...😋",
+          },
+          {
+            media: "moments_3.jpg",
+            type: "img",
+            caption:
+              "The Infamous Biscuit, Common In Almost All Of Our Meets...😛",
+          },
+          {
+            media: "moments_4.jpg",
+            type: "img",
+            caption: "You With Your Favourite Before My Arrival...😝😍",
+          },
+          {
+            media: "moments_5.jpg",
+            type: "img",
+            caption: "The Way You Look At Me...😍💗💋",
+          },
+          {
+            media: "moments_6.jpg",
+            type: "img",
+            caption: "All TIme Favourite View, Also The First Photoshoot...😚💗",
+          },
+        ],
+        gameGoal: 11,
+        thoughts: [
+          "did he reply late?",
+          "what if I said something weird",
+          "he's quiet today...",
+          "am I too much?",
+          "why did I say that",
+          "he must be bored of me",
+          "he didn't say Good Night to me",
+          "what if he leaves",
+          "was my tone off?",
+          "I should text first?",
+          "he didn't say love u??",
+        ],
+        quiz: [
+          {
+            q: "Where did we first talk?",
+            opts: [
+              "Instagram",
+              "Some random app",
+              "In a dream",
+              "At the junior college",
+            ],
+            a: 1,
+            wrong: "Wrong. Try again, goblin.",
+          },
+          {
+            q: "What's my most annoying habit?",
+            opts: ["Laziness", "Hesitant", "Being Silent", "All of the above"],
+            a: 3,
+            wrong: "Not quite 😭",
+          },
+          {
+            q: "Where did we meet for second time???",
+            opts: [
+              "Roadside",
+              "Random Bench At Railway Station",
+              "A Park Near Our College WHere We Studied Together Unknowingly For The First Time",
+              "You Don't Remember???",
+            ],
+            a: 1,
+            wrong: "You forgot this?? Rude.",
+          },
+        ],
+        galleries: {
+          solo: {
+            title: "Just you 📸",
+            intro:
+              "In case you forgot how ridiculously good you look. Just scroll down.",
+            items: [
+              {
+                media: "ju_1.jpg",
+                type: "img",
+                caption: "You With Another Cutu...😍",
+              },
+              {
+                media: "ju_2.jpg",
+                type: "img",
+                caption: "The First Rose Exchange...😛",
+              },
+              {
+                media: "ju_3.jpg",
+                type: "img",
+                caption:
+                  "You, At One Of Our Most Anticipated Places Experiencing The Calmness Which I Always Wanted You To Experience Too...😍💗",
+              },
+              {
+                media: "ju_4.jpg",
+                type: "img",
+                caption:
+                  "Date In Another City, Favourite Person And Favourite Dessert-Beverage...😋💗",
+              },
+              {
+                media: "ju_5.jpg",
+                type: "img",
+                caption: "You In Long Hairs and a Godly Outfit Combo...😍",
+              },
+            ],
+          },
+          together: {
+            title: "Us 💞",
+            intro: "Not enough of these yet. We're fixing that.",
+            items: [
+              {
+                media: "us_1.jpg",
+                type: "img",
+                caption: "One Of The First Selfies We Clicked Together...😍😚",
+              },
+
+              {
+                media: "us_2.png",
+                type: "img",
+                caption: "The Widest I've Smiled In Years...😛💋",
+              },
+              {
+                media: "us_3.png",
+                type: "img",
+                caption: "Our First Mirror Selfie...😍💗",
+              },
+              {
+                media: "us_4.png",
+                type: "img",
+                caption: "The First Hand Holding Moment...😝🫱🏻‍🫲🏻",
+              },
+              {
+                media: "us_5.png",
+                type: "img",
+                caption: "A Precious Experience...😚🫂💗",
+              },
+              {
+                media: "us_6.png",
+                type: "img",
+                caption: "Sleeping Beauty...😍😚💋",
+              },
+            ],
+          },
+        },
+        song: {
+          title: "One song, one moment 🎧",
+          intro:
+            "Some things are easier said by a song. Press play. It starts exactly where I want you to listen.",
+          name: "Sitaare", // song name shown under the line
+          videoId: "cpDyLJkhg0I", // the 11 characters after v= in the YouTube link
+          startSeconds: 135, // second where the verse starts, e.g. 1:15 = 75
+          //line: "Paste your chosen lyric line here", // type the line yourself
+        },
+        overthinks: [
+          {
+            worry: "He'll get tired of me",
+            truth: "I chose you, and I keep choosing you only...😚💗",
+          },
+          {
+            worry: "I'm too much______",
+            truth: "You're exactly the right amount of everything...💋💗",
+          },
+          {
+            worry: "He is Hesitant",
+            truth: "I'm just processing everything...🥹🫂",
+          },
+        ],
+        finalTitle: "Happiest Birthday, \n[Nickname] 🎂",
+        finalSlides: [
+          "final_1.jpg",
+          "final_2.jpg",
+          "final_3.jpg",
+          "final_4.jpg",
+          "final_5.jpg",
+        ],
+        slideSeconds: 2.5,
+        usSlideSeconds: 2.5,
+
+        letter:
+          "Cheers To You For Laying The Foundations Of Everything You've Done And Putting In All This Work For Years On End On Yourself Before Me...😚💗\nThen You Were Always Supporting Me And My Growth In All Ways. I Have Loved Every Interaction With You, All The Moments And Conversations We Had, Everything Is Worth It...🥹🫂💗\nThank You For Trusting Me In This Journey Along with you. I Love You So Much With All My Heart...🥹🫶🏻💗\nAnd Yeah It's Just Been Really Cool To Watch You And Learn And Then Teach Me Everything Along The Way As Well...🫂💗\nI Believe You Should Be Really Proud Of Yourself For Everything You've Accomplished While Being Through Hardships And Ups And Downs...🥹🫶🏻\nSo Cheers And I Love You...😚💗💋",
+      };
+
+      /* ===================== ENGINE ===================== */
+      const $ = (id) => document.getElementById(id);
+      const TEST = location.search.includes("test"); // add ?test to the URL to skip the countdown
+
+      function go(n) {
+        document
+          .querySelectorAll("section")
+          .forEach((s) => s.classList.remove("active"));
+        $("s" + n).classList.add("active");
+        window.scrollTo(0, 0);
+        if (n == 1) animStats();
+        if (n == 2) initScratch();
+        if (n == 3) $("goal").textContent = CFG.gameGoal;
+        if (n == 4) showQ();
+        if (n == 5) initThings();
+        if (n == 6) {
+          initFinal();
+          hearts();
+        }
+        if (n == 7) initSong();
+        if (n == 8) initGallery("solo");
+        if (n == 9) initUsSlides();
+      }
+
+      function media(m, type, loop) {
+        if (!m) return type === "video" ? "🎬 video here" : "📷 photo here";
+        return type === "video"
+          ? `<video src="${m}" controls playsinline ${loop ? "loop" : ""}></video>`
+          : `<img src="${m}" alt="">`;
+      }
+
+      // LOCK
+      $("lockTitle").textContent = "Hey " + CFG.nickname;
+      $("lockMsg").textContent = CFG.lockMsg;
+      $("codeHint").textContent = CFG.codeHint;
+      function tick() {
+        const d = new Date(CFG.unlockAt) - new Date();
+        if (d <= 0 || TEST) {
+          $("count").innerHTML = "<b>It's time 🎉</b>";
+          return;
+        }
+        const t = Math.floor(d / 1000),
+          v = [
+            [Math.floor(t / 86400), "days"],
+            [Math.floor((t % 86400) / 3600), "hrs"],
+            [Math.floor((t % 3600) / 60), "min"],
+            [t % 60, "sec"],
+          ];
+        $("count").innerHTML = v
+          .map((x) => `<div><b>${x[0]}</b>${x[1]}</div>`)
+          .join("");
+      }
+      tick();
+      setInterval(tick, 1000);
+      function tryCode() {
+        const locked = new Date(CFG.unlockAt) > new Date() && !TEST;
+        if (locked) {
+          alert("Not yet! Wait for the countdown 😌");
+          return;
+        }
+        if ($("code").value.trim().toLowerCase() === CFG.code.toLowerCase())
+          go(1);
+        else $("codeHint").textContent = "Nope 😤 " + CFG.codeHint;
+      }
+      $("code").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") tryCode();
+      });
+
+      // CERT
+      $("certName").textContent = CFG.name;
+      $("certTitle").textContent = CFG.certTitle;
+      $("certSign").textContent = CFG.certSign;
+      function animStats() {
+        $("stats").innerHTML = CFG.stats
+          .map(
+            (s) =>
+              `<div class="stat">${s[0]}: <b>${s[1]}%</b><div class="bar"><i data-w="${Math.min(s[1], 100)}"></i></div></div>`,
+          )
+          .join("");
+        setTimeout(
+          () =>
+            document
+              .querySelectorAll(".bar i")
+              .forEach((i) => (i.style.width = i.dataset.w + "%")),
+          100,
+        );
+      }
+
+      // SCRATCH
+      let scratched = 0,
+        scInit = false;
+      function initScratch() {
+        if (scInit) return;
+        scInit = true;
+        $("scGrid").innerHTML = CFG.scratch
+          .map(
+            (c, i) =>
+              `<div class="sc"><div class="under"><div class="m">${media(c.media, c.type, true)}</div><p>${c.caption}</p></div><canvas data-i="${i}"></canvas></div>`,
+          )
+          .join("");
+        document.querySelectorAll(".sc canvas").forEach((cv) => {
+          const r = cv.parentElement.getBoundingClientRect();
+          cv.width = r.width;
+          cv.height = r.height;
+          const x = cv.getContext("2d", { willReadFrequently: true });
+          const g = x.createLinearGradient(0, 0, cv.width, cv.height);
+          g.addColorStop(0, "#ff8fb7");
+          g.addColorStop(1, "#ffb703");
+          x.fillStyle = g;
+          x.fillRect(0, 0, cv.width, cv.height);
+          x.fillStyle = "#fff";
+          x.font = "bold 16px sans-serif";
+          x.textAlign = "center";
+          x.fillText("scratch ✨", cv.width / 2, cv.height / 2);
+          let down = false,
+            done = false;
+          const pos = (e) => {
+            const b = cv.getBoundingClientRect();
+            return [e.clientX - b.left, e.clientY - b.top];
+          };
+          const scr = (e) => {
+            if (!down || done) return;
+            const [px, py] = pos(e);
+            x.globalCompositeOperation = "destination-out";
+            x.beginPath();
+            x.arc(px, py, 20, 0, 7);
+            x.fill();
+            check();
+          };
+          function check() {
+            const d = x.getImageData(0, 0, cv.width, cv.height).data;
+            let c = 0;
+            for (let i = 3; i < d.length; i += 40) if (d[i] === 0) c++;
+            if (c / (d.length / 40) > 0.45) {
+              done = true;
+              cv.style.transition = "opacity .6s";
+              cv.style.opacity = 0;
+              cv.style.pointerEvents = "none";
+              scratched++;
+              if (scratched >= CFG.scratch.length)
+                $("scNext").style.display = "inline-block";
+            }
+          }
+          cv.addEventListener("pointerdown", (e) => {
+            down = true;
+            cv.setPointerCapture(e.pointerId);
+            scr(e);
+          });
+          cv.addEventListener("pointermove", scr);
+          cv.addEventListener("pointerup", () => (down = false));
+        });
+      }
+
+      // GAME
+      let score = 0,
+        miss = 0,
+        timer = null,
+        running = false;
+      function startGame() {
+        score = 0;
+        miss = 0;
+        running = true;
+        $("score").textContent = 0;
+        $("miss").textContent = 0;
+        $("arena").innerHTML = "";
+        $("startBtn").style.display = "none";
+        timer = setInterval(spawn, 850);
+      }
+      function spawn() {
+        if (!running) return;
+        const t = document.createElement("div");
+        t.className = "thought";
+        t.textContent =
+          CFG.thoughts[Math.floor(Math.random() * CFG.thoughts.length)];
+        t.style.left = Math.random() * 55 + "%";
+        t.style.animationDuration = 3.2 + Math.random() * 1.8 + "s";
+        const pop = (e) => {
+          e.preventDefault();
+          if (t.dataset.d) return;
+          t.dataset.d = 1;
+          t.classList.add("pop");
+          score++;
+          $("score").textContent = score;
+          setTimeout(() => t.remove(), 250);
+          if (score >= CFG.gameGoal) win();
+        };
+        t.addEventListener("pointerdown", pop);
+        t.addEventListener("animationend", () => {
+          if (!t.dataset.d) {
+            miss++;
+            $("miss").textContent = miss;
+            t.remove();
+          }
+        });
+        $("arena").appendChild(t);
+      }
+      function win() {
+        running = false;
+        clearInterval(timer);
+        $("arena").innerHTML =
+          `<div style="padding-top:130px"><div class="big">🎉</div><h2>Overthoughts defeated</h2><p>(for today, at least)</p><button onclick="go(4)">Continue →</button></div>`;
+        hearts();
+      }
+
+      // QUIZ
+      let qi = 0;
+      function showQ() {
+        const q = CFG.quiz[qi];
+        $("qnum").textContent = `Question ${qi + 1} of ${CFG.quiz.length}`;
+        $("qtext").textContent = q.q;
+        $("qmsg").textContent = "";
+        $("qopts").innerHTML = q.opts
+          .map((o, i) => `<button class="opt" data-i="${i}">${o}</button>`)
+          .join("");
+        document.querySelectorAll(".opt").forEach(
+          (b) =>
+            (b.onclick = () => {
+              if (+b.dataset.i === q.a) {
+                b.classList.add("ok");
+                $("qmsg").textContent = "Correct 💖";
+                setTimeout(() => {
+                  qi++;
+                  qi < CFG.quiz.length ? showQ() : go(7);
+                }, 900);
+              } else {
+                b.classList.add("bad");
+                $("qmsg").textContent = q.wrong;
+              }
+            }),
+        );
+      }
+
+      // JUST YOU GALLERY (vertical scroll)
+      const galInit = {};
+      function initGallery(k) {
+        const g = CFG.galleries[k];
+        $("g_" + k + "_title").textContent = g.title;
+        $("g_" + k + "_intro").textContent = g.intro;
+        if (galInit[k]) return;
+        galInit[k] = true;
+        $("g_" + k).innerHTML = g.items
+          .map(
+            (it) =>
+              `<div class="gi"><div class="gm">${media(it.media, it.type)}</div><p>${it.caption || ""}</p></div>`,
+          )
+          .join("");
+      }
+
+      // SLIDESHOW: the card takes the shape of each photo, so nothing is cropped and no bars show
+      function makeSlideshow(box, srcs, secs, onShow) {
+        if (!box || !srcs || !srcs.length) return;
+        box.innerHTML = srcs
+          .map(
+            (s, i) => `<img src="${s}" alt="" class="${i === 0 ? "on" : ""}">`,
+          )
+          .join("");
+        const imgs = [...box.querySelectorAll("img")];
+        let cur = 0,
+          timer = null;
+        const fit = () => {
+          const im = imgs[cur];
+          if (!im.naturalWidth) return;
+          const p = box.parentElement,
+            cs = getComputedStyle(p);
+          const maxW =
+            p.clientWidth -
+            parseFloat(cs.paddingLeft) -
+            parseFloat(cs.paddingRight);
+          if (maxW <= 0) return;
+          const r = im.naturalWidth / im.naturalHeight,
+            maxH = window.innerHeight * 0.7;
+          let w = maxW,
+            h = w / r;
+          if (h > maxH) {
+            h = maxH;
+            w = h * r;
+          }
+          box.style.width = w + "px";
+          box.style.height = h + "px";
+        };
+        const show = (i) => {
+          imgs[cur].classList.remove("on");
+          cur = i;
+          imgs[cur].classList.add("on");
+          fit();
+          if (onShow) onShow(cur);
+        };
+        const next = () => show((cur + 1) % imgs.length);
+        const start = () => {
+          clearInterval(timer);
+          if (imgs.length > 1)
+            timer = setInterval(
+              () => {
+                if (box.offsetParent) next();
+              },
+              (secs || 3.5) * 1000,
+            );
+        };
+        imgs.forEach((im) => {
+          if (im.complete) fit();
+          else im.addEventListener("load", fit);
+        });
+        box.addEventListener("click", () => {
+          if (imgs.length > 1) {
+            next();
+            start();
+          }
+        });
+        window.addEventListener("resize", fit);
+        if (onShow) onShow(0);
+        fit();
+        start();
+      }
+
+      // US SLIDESHOW
+      let usInit = false;
+      function initUsSlides() {
+        const g = CFG.galleries.together;
+        $("g_together_title").textContent = g.title;
+        $("g_together_intro").textContent = g.intro;
+        if (usInit) return;
+        usInit = true;
+        makeSlideshow(
+          $("usSlides"),
+          g.items.map((i) => i.media),
+          CFG.usSlideSeconds || 3.5,
+          (i) => {
+            $("usCap").textContent = g.items[i].caption || "";
+          },
+        );
+      }
+
+      // SONG
+      function initSong() {
+        $("songTitle").textContent = CFG.song.title;
+        $("songIntro").textContent = CFG.song.intro;
+        $("songLine").textContent = CFG.song.line || "";
+        $("songName").textContent = "" + CFG.song.name;
+      }
+      function openSong() {
+        if (!CFG.song.videoId) {
+          alert("Add the videoId in CFG.song first");
+          return;
+        }
+        window.open(
+          `https://www.youtube.com/watch?v=${CFG.song.videoId}&t=${CFG.song.startSeconds}s`,
+          "_blank",
+        );
+      }
+
+      // OVERTHINK
+      let opened = 0,
+        thInit = false;
+      function initThings() {
+        if (thInit) return;
+        thInit = true;
+        $("things").innerHTML = CFG.overthinks
+          .map(
+            (t) =>
+              `<div class="thing"><s>${t.worry}</s><div class="truth">${t.truth}</div></div>`,
+          )
+          .join("");
+        document.querySelectorAll(".thing").forEach(
+          (el) =>
+            (el.onclick = () => {
+              if (!el.classList.contains("open")) {
+                el.classList.add("open");
+                opened++;
+                if (opened >= CFG.overthinks.length)
+                  $("thNext").style.display = "inline-block";
+              }
+            }),
+        );
+      }
+
+      // FINAL
+      let finInit = false;
+      function initFinal() {
+        if (finInit) return;
+        finInit = true;
+        $("finalTitle").textContent = CFG.finalTitle.replace(
+          "[Nickname]",
+          CFG.nickname,
+        );
+        makeSlideshow($("finalSlides"), CFG.finalSlides, CFG.slideSeconds);
+        $("letter").textContent = CFG.letter;
+      }
+      function hearts() {
+        for (let i = 0; i < 18; i++) {
+          const h = document.createElement("div");
+          h.className = "float";
+          h.textContent = ["💖", "💗", "💕", "✨"][i % 4];
+          h.style.left = Math.random() * 95 + "vw";
+          h.style.fontSize = 18 + Math.random() * 22 + "px";
+          h.style.animationDelay = Math.random() * 1.5 + "s";
+          document.body.appendChild(h);
+          setTimeout(() => h.remove(), 6000);
+        }
+      }
+    </script>
+  </body>
+</html>
