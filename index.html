@@ -498,9 +498,11 @@
       <h1 id="lockTitle"></h1>
       <div id="count"></div>
       <p id="lockMsg"></p>
-      <input id="code" placeholder="secret code..." autocomplete="off" />
-      <br /><button onclick="tryCode()">Unlock</button>
-      <p class="hint" id="codeHint"></p>
+      <div id="codeBox" style="display: none">
+  <input id="code" placeholder="secret code..." autocomplete="off" />
+  <br /><button onclick="tryCode()">Unlock</button>
+  <p class="hint" id="codeHint"></p>
+</div>
     </section>
 
     <!-- 2. CERTIFICATE -->
@@ -519,7 +521,9 @@
     <!-- 3. SCRATCH -->
     <section id="s2">
       <h1>Memory Lane 🛤️</h1>
-<p class="hint">Scratch each card to relive a moment. Reveal them all to continue.</p>
+      <p class="hint">
+        Scratch each card to relive a moment. Reveal them all to continue.
+      </p>
       <div class="grid" id="scGrid"></div>
       <button id="scNext" style="display: none" onclick="go(3)">Next →</button>
     </section>
@@ -654,7 +658,8 @@ Leave "" to show a placeholder.
           {
             media: "moments_6.jpg",
             type: "img",
-            caption: "All TIme Favourite View, Also The First Photoshoot...😚💗",
+            caption:
+              "All TIme Favourite View, Also The First Photoshoot...😚💗",
           },
         ],
         gameGoal: 11,
@@ -794,7 +799,8 @@ Leave "" to show a placeholder.
               {
                 media: "us_11.png",
                 type: "img",
-                caption: "Metro Ride - One Of The Many Things We Experienced Together...😍",
+                caption:
+                  "Metro Ride - One Of The Many Things We Experienced Together...😍",
               },
               {
                 media: "us_12.png",
@@ -879,6 +885,7 @@ Leave "" to show a placeholder.
       $("codeHint").textContent = CFG.codeHint;
       function tick() {
         const d = new Date(CFG.unlockAt) - new Date();
+        $("codeBox").style.display = d <= 0 || TEST ? "block" : "none";
         if (d <= 0 || TEST) {
           $("count").innerHTML = "<b>It's time 🎉</b>";
           return;
@@ -1061,7 +1068,7 @@ Leave "" to show a placeholder.
             (b.onclick = () => {
               if (+b.dataset.i === q.a) {
                 b.classList.add("ok");
-                $("qmsg").textContent = "Correct 💖";
+                $("qmsg").textContent = "Correct 💗";
                 setTimeout(() => {
                   qi++;
                   qi < CFG.quiz.length ? showQ() : go(7);
@@ -1233,7 +1240,7 @@ Leave "" to show a placeholder.
         for (let i = 0; i < 18; i++) {
           const h = document.createElement("div");
           h.className = "float";
-          h.textContent = ["💖", "💗", "💕", "✨"][i % 4];
+          h.textContent = ["😚", "💗", "💕", "✨"][i % 4];
           h.style.left = Math.random() * 95 + "vw";
           h.style.fontSize = 18 + Math.random() * 22 + "px";
           h.style.animationDelay = Math.random() * 1.5 + "s";
